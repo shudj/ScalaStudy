@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jl.test.dao.ProductDao">
+
+    <!--根据商品名称查询商品信息-->
+    <select id="list" statementType="STATEMENT" resultType="java.util.Map" parameterType="java.lang.String">
+        select
+          id, name, unit, price, code, image0, image1, image2
+        from skuinfo
+        where
+          name REGEXP ${name}
+          and isdel = 0
+    </select>
+
+    <!--删除商品-->
+    <update id="delete" parameterType="java.lang.Integer" statementType="STATEMENT">
+        update skuinfo
+        set isdel = 1
+        where id = ${id}
+    </update>
+
+    <!--更改商品信息-->
+    <update id="update" statementType="STATEMENT">
+        update
+            skuinfo
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null and name!=''">name = '${name}',</if>
+            <if test="unit!=null and unit!=''">unit = '${unit}',</if>
+            <if test="price!=null and price!=0.0">price = '${price}',</if>
+            <if test="code!=null and code!=''">code = '${code}',</if>
+            <if test="image0!=null and image0!=''">image0 = '${image0}',</if>
+            <if test="image1!=null and image1!=''">image1 = '${image1}',</if>
+            <if test="image2!=null and image2!=''">image2 = '${image2}',</if>
+        </trim>
+        where id = ${id}
+    </update>
+
+    <insert id="insert" statementType="STATEMENT">
+        insert into skuinfo
+        (
+          name, unit, price, code, image0, image1, image2
+        )
+        values
+        (
+          ${name}, ${unit}, ${price}, ${code}, ${image0}, ${image1}, ${image2}
+        )
+    </insert>
+</mapper>
